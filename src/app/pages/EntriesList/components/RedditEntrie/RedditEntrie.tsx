@@ -7,6 +7,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { markAsRead, dismissEntrie } from '../../../../store/redditSlice';
+import { useDispatch } from 'react-redux';
 
 interface RedditEntrieInterface {    
     title: string,
@@ -42,7 +44,8 @@ const useStyles = makeStyles(() => ({
   
 
 export const RedditEntrie = (props: RedditEntrieInterface) => {
-    const classes = useStyles();    
+    const classes = useStyles(); 
+    const dispatch = useDispatch();   
     return(
         <Card className={classes.root}>
             <CardActionArea>
@@ -60,11 +63,11 @@ export const RedditEntrie = (props: RedditEntrieInterface) => {
                 </CardContent>
             </CardActionArea>
             <CardActions className={classes.actions}>
-                <Button size="small" color="primary">
-                Share
-                </Button>
-                <Button size="small" color="primary">
-                Learn More
+                {props.unread && <Button size="small" color="primary" onClick={()=>{dispatch(markAsRead(props.id))}}>
+                Mark as read
+                </Button>}
+                <Button size="small" color="primary" onClick={()=>{dispatch(dismissEntrie(props.id))}}>
+                Dismiss
                 </Button>
             </CardActions>
         </Card>

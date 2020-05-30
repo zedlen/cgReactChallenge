@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const AxiosService = axios.create({
-  baseURL: "https://www.reddit.com/r/all/top/.json?t=all&limit=10",
+  baseURL: "https://www.reddit.com/r/all/top",
   headers: {
     "Content-Type": "application/json"
   }

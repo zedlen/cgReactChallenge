@@ -2,27 +2,34 @@ import React, { useEffect } from 'react'
 import { RedditEntrie } from './components'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../../store/store'
-import { loadList } from '../../store/redditSlice'
-
-const style = {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alingItems: 'center'
-}
+import { loadList, loadAfter, loadBefore } from '../../store/redditSlice'
+import './style.css'
+import { Button, CircularProgress } from '@material-ui/core'
 
 export const EntriesList = () => {
-    const { items, loaded } = useSelector( (state: RootState) => state.reddit )
+    const { items, loaded, before, after, loading, page } = useSelector( (state: RootState) => state.reddit )
     const dispatch = useDispatch()
     useEffect(()=>{
         if( !loaded ){
             dispatch(loadList())
         }
     },[ loaded, dispatch ])
-    console.log(items)
+    if (loading) {
+        return(
+            <CircularProgress />            
+        )
+    }
     return(
-        <div style={{...style, flexWrap: 'wrap'}}>
+        <div className="entriesHolder">
             {items.map(item => <RedditEntrie {...item} key={item.id} />)}
+            <div className="buttons">
+                {( before || page >1) && <Button onClick={()=>{dispatch(loadBefore())}}>
+                    Previous
+                </Button>}
+                { (after && page < 5) && <Button onClick={()=>{dispatch(loadAfter())}}>
+                    Next
+                </Button>}
+            </div>
         </div>
     )
 }
